@@ -181,7 +181,7 @@ class Client
      */
     public function send()
     {
-        $this->requests = [ $this->request ];
+        $this->requests = [ clone $this->request ];
         $this->responses = [];
         $request = $this->prepareRequest();
         $handler = $this->getHandler();
@@ -782,9 +782,9 @@ class Client
      */
     public function __call($method, $args)
     {
-        if (method_exists($this->requests[0], $method)) {
+        if (method_exists($this->request, $method)) {
             if (stripos($method, 'with') === 0) {
-                $this->requests[0] = call_user_func_array([$this->requests[0], $method], $args);
+                $this->request = call_user_func_array([$this->request, $method], $args);
 
                 return $this;
             }
