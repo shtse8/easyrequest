@@ -70,6 +70,7 @@ class Client
      */
     protected $options = [];
 
+    protected $request;
     protected $requests = [];
     protected $responses = [];
     protected $error;
@@ -96,7 +97,8 @@ class Client
      */
     private function __construct($url, array $options = [])
     {
-        $this->requests[0] = new Request($url);
+        $this->request = new Request($url);
+        $this->requests[0] = $this->request;
         $this->options = self::$defaultOptions;
 
         $this->withOption($options);
@@ -179,6 +181,8 @@ class Client
      */
     public function send()
     {
+        $this->requests = [ $this->request ];
+        $this->responses = [];
         $request = $this->prepareRequest();
         $handler = $this->getHandler();
         $cookieJar = $this->options['cookie_jar'];
